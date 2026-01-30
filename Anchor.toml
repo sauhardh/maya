@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-maya = "7j4hga4DjgvX2Ge1vxaXUYiW2Tv1a2CJQ5XrnqkJW5nP"
+maya = "JSkdjZGLt8gKvFsQCB2Kzd7ERgUEk1FXNJEeUiw9PWM"
 
 [registry]
 url = "https://api.apr.dev"

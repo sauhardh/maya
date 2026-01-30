@@ -1,8 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Maya } from "../target/types/maya";
-import { rpc } from "@coral-xyz/anchor/dist/cjs/utils";
-import { listeners } from "node:cluster";
 
 describe("maya", () => {
   // Configure the client to use the local cluster.

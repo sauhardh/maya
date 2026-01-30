@@ -44,7 +44,7 @@ impl PetCare {
 
         pet.last_update += decayed_times as i64 * DECAY_TIME;
 
-        if pet.hunger == 0 || pet.happiness == 0 {
+        if pet.hunger == 0 {
             pet.alive = false;
             pet.happiness = 0;
             pet.hunger = 0;

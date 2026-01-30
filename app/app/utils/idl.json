@@ -1,0 +1,376 @@
+{
+  "address": "JSkdjZGLt8gKvFsQCB2Kzd7ERgUEk1FXNJEeUiw9PWM",
+  "metadata": {
+    "name": "maya",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "apply_decay",
+      "discriminator": [
+        120,
+        61,
+        184,
+        233,
+        43,
+        126,
+        180,
+        190
+      ],
+      "accounts": [
+        {
+          "name": "pet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  121,
+                  97
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "feed_pet",
+      "discriminator": [
+        178,
+        186,
+        190,
+        67,
+        17,
+        33,
+        124,
+        31
+      ],
+      "accounts": [
+        {
+          "name": "pet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  121,
+                  97
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_pet",
+      "discriminator": [
+        192,
+        170,
+        58,
+        187,
+        112,
+        96,
+        43,
+        195
+      ],
+      "accounts": [
+        {
+          "name": "pet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  121,
+                  97
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": {
+            "option": "string"
+          }
+        }
+      ]
+    },
+    {
+      "name": "play_pet",
+      "discriminator": [
+        201,
+        76,
+        123,
+        79,
+        205,
+        241,
+        74,
+        193
+      ],
+      "accounts": [
+        {
+          "name": "pet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  121,
+                  97
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "withdraw_sol",
+      "discriminator": [
+        145,
+        131,
+        74,
+        136,
+        65,
+        137,
+        42,
+        38
+      ],
+      "accounts": [
+        {
+          "name": "pet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  121,
+                  97
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Pet",
+      "discriminator": [
+        180,
+        195,
+        178,
+        241,
+        61,
+        123,
+        238,
+        32
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "EmitPetUpdated",
+      "discriminator": [
+        29,
+        112,
+        113,
+        124,
+        119,
+        149,
+        133,
+        56
+      ]
+    },
+    {
+      "name": "PetDied",
+      "discriminator": [
+        55,
+        108,
+        213,
+        116,
+        63,
+        95,
+        80,
+        70
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "PetIsDead",
+      "msg": "Pet is dead and cannot be inteacted with!"
+    },
+    {
+      "code": 6001,
+      "name": "NoDecayNeeded",
+      "msg": "Nothing to decay yet!"
+    },
+    {
+      "code": 6002,
+      "name": "Overflow",
+      "msg": "Overflow occured"
+    },
+    {
+      "code": 6003,
+      "name": "UnAuthorized",
+      "msg": "You are not worthy enough to create a new pet"
+    },
+    {
+      "code": 6004,
+      "name": "InSufficientFunds",
+      "msg": "Insufficient fund, Includes rent calculation"
+    }
+  ],
+  "types": [
+    {
+      "name": "EmitPetUpdated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "hunger",
+            "type": "u8"
+          },
+          {
+            "name": "happiness",
+            "type": "u8"
+          },
+          {
+            "name": "alive",
+            "type": "bool"
+          },
+          {
+            "name": "last_feeder",
+            "type": "pubkey"
+          },
+          {
+            "name": "last_update",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Pet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "hunger",
+            "type": "u8"
+          },
+          {
+            "name": "happiness",
+            "type": "u8"
+          },
+          {
+            "name": "alive",
+            "type": "bool"
+          },
+          {
+            "name": "last_update",
+            "type": "i64"
+          },
+          {
+            "name": "total_sol_received",
+            "type": "u64"
+          },
+          {
+            "name": "last_feeder",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PetDied",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}

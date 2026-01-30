@@ -3,7 +3,7 @@ use anchor_lang::prelude::{*};
 pub mod utils;
 use crate::utils::PetCare;
 
-declare_id!("7j4hga4DjgvX2Ge1vxaXUYiW2Tv1a2CJQ5XrnqkJW5nP");
+declare_id!("JSkdjZGLt8gKvFsQCB2Kzd7ERgUEk1FXNJEeUiw9PWM");
 
 pub const HUNGER_GAIN_AMT: u8 = 2;
 pub const HUNGER_DECAY_AMT: u8 = 1;
@@ -15,9 +15,9 @@ pub const MAX_HAPPINESS_AMT: u8 = 100;
 
 pub const DECAY_TIME: i64 = 30;
 pub const FOOD_COST_LAMPORTS: u64 = 100_000_000;
-// pub static OWNER: Pubkey = pubkey!("9Yz1ZHg1SFzrhHgVXKnLSBSUBtzo8uTsmwHpkzcbmNzv"); 
+pub static OWNER: Pubkey = pubkey!("9Yz1ZHg1SFzrhHgVXKnLSBSUBtzo8uTsmwHpkzcbmNzv"); 
 
-pub static OWNER: Pubkey = pubkey!("HpMFXSQA8nKJDidF88hDsYv1efnVgwPnzwCYH1khxMZp"); 
+// pub static OWNER: Pubkey = pubkey!("HpMFXSQA8nKJDidF88hDsYv1efnVgwPnzwCYH1khxMZp"); 
 #[program]
 pub mod maya {
     use super::*;
@@ -43,6 +43,7 @@ pub mod maya {
             happiness:pet.happiness,
             alive:pet.alive,
             last_feeder:pet.last_feeder,
+            last_update: pet.last_update,
         });
 
         Ok(())
@@ -58,6 +59,7 @@ pub mod maya {
             happiness:pet.happiness,
             alive:pet.alive,
             last_feeder:pet.last_feeder,
+            last_update: pet.last_update,
         });
 
         Ok(())
@@ -91,6 +93,7 @@ pub mod maya {
         happiness:pet.happiness,
         alive:pet.alive,
         last_feeder:pet.last_feeder,
+        last_update: pet.last_update,
         });
 
         msg!("Now hunger is, {}", pet.hunger);
@@ -113,6 +116,7 @@ pub mod maya {
         happiness:pet.happiness,
         alive:pet.alive,
         last_feeder:pet.last_feeder,
+        last_update: pet.last_update,
         });
 
 
@@ -201,6 +205,7 @@ pub struct EmitPetUpdated {
     pub happiness: u8,
     pub alive: bool,
     pub last_feeder: Pubkey,
+    pub last_update: i64,
 }
 
 #[event]
