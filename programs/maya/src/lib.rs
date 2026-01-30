@@ -1,24 +1,30 @@
-use anchor_lang::prelude::*;
-use anchor_lang::system_program;
+use anchor_lang::prelude::{*};
+
+pub mod utils;
+use crate::utils::PetCare;
+
 declare_id!("7j4hga4DjgvX2Ge1vxaXUYiW2Tv1a2CJQ5XrnqkJW5nP");
+
+pub const HUNGER_GAIN_AMT: u8 = 2;
+pub const HUNGER_DECAY_AMT: u8 = 1;
+pub const HAPPINESS_DECAY_AMT: u8 = 2;
+pub const HAPPINESS_GAIN_AMT: u8 = 5;
+
+pub const MAX_FEED_AMT: u8 = 100;
+pub const MAX_HAPPINESS_AMT: u8 = 100;
+
+pub const DECAY_TIME: i64 = 30;
+pub const FOOD_COST_LAMPORTS: u64 = 100_000_000;
+pub static OWNER: Pubkey = pubkey!("9Yz1ZHg1SFzrhHgVXKnLSBSUBtzo8uTsmwHpkzcbmNzv"); 
 
 #[program]
 pub mod maya {
     use super::*;
 
-    pub const HUNGER_GAIN_AMT: u8 = 2;
-    pub const HUNGER_DECAY_AMT: u8 = 1;
-    pub const HAPPINESS_DECAY_AMT: u8 = 2;
-    pub const HAPPINESS_GAIN_AMT: u8 = 5;
-
-    pub const MAX_FEED_AMT: u8 = 100;
-    pub const MAX_HAPPINESS_AMT: u8 = 100;
-
-    pub const DECAY_TIME: i64 = 30;
-    pub const FOOD_COST_LAMPORTS: u64 = 100_000_000;
-
     pub fn init_pet(ctx: Context<InitPet>, name: Option<String>) -> Result<()> {
         msg!("Welcome home {name:?} <<<<< ID: {:?}", ctx.program_id);
+
+        require!(ctx.accounts.authority.key() == OWNER, CustomError::UnAuthorized);
 
         let pet = &mut ctx.accounts.pet;
         pet.name = name.unwrap_or("maya".to_string());
@@ -30,24 +36,38 @@ pub mod maya {
         pet.total_sol_received = 0;
         pet.last_feeder = ctx.accounts.authority.key();
 
+        emit!(EmitPetUpdated{
+            hunger: pet.hunger,
+            happiness:pet.happiness,
+            alive:pet.alive,
+            last_feeder:pet.last_feeder,
+        });
+
         Ok(())
     }
 
     pub fn apply_decay(ctx: Context<UpdatePet>) -> Result<()> {
         let pet = &mut ctx.accounts.pet;
         require!(pet.alive, CustomError::PetIsDead);
-        apply_decay_internal(&mut ctx.accounts.pet)?;
+        PetCare::apply_decay_internal(pet)?;
+
+        emit!(EmitPetUpdated{
+            hunger: pet.hunger,
+            happiness:pet.happiness,
+            alive:pet.alive,
+            last_feeder:pet.last_feeder,
+        });
 
         Ok(())
     }
 
     pub fn feed_pet(ctx: Context<UpdatePet>) -> Result<()> {
         msg!("Feeding Pet");
-        receive_sol(&ctx)?;
+        PetCare::receive_sol(&ctx)?;
 
         let pet = &mut ctx.accounts.pet;
 
-        apply_decay_internal(pet)?;
+        PetCare::apply_decay_internal(pet)?;
         require!(pet.alive, CustomError::PetIsDead);
 
         if pet.hunger + HUNGER_GAIN_AMT <= MAX_FEED_AMT {
@@ -64,6 +84,13 @@ pub mod maya {
         pet.total_sol_received += FOOD_COST_LAMPORTS;
         pet.last_feeder = ctx.accounts.authority.key();
 
+       emit!(EmitPetUpdated{
+        hunger: pet.hunger,
+        happiness:pet.happiness,
+        alive:pet.alive,
+        last_feeder:pet.last_feeder,
+        });
+
         msg!("Now hunger is, {}", pet.hunger);
         Ok(())
     }
@@ -71,57 +98,41 @@ pub mod maya {
     pub fn play_pet(ctx: Context<UpdatePet>) -> Result<()> {
         let pet = &mut ctx.accounts.pet;
 
-        apply_decay_internal(pet)?;
+        PetCare::apply_decay_internal(pet)?;
 
         if pet.happiness + HAPPINESS_GAIN_AMT <= MAX_HAPPINESS_AMT {
             pet.happiness += HAPPINESS_GAIN_AMT;
         } else {
             pet.happiness = MAX_HAPPINESS_AMT;
         }
+        
+       emit!(EmitPetUpdated{
+        hunger: pet.hunger,
+        happiness:pet.happiness,
+        alive:pet.alive,
+        last_feeder:pet.last_feeder,
+        });
+
 
         Ok(())
     }
-}
 
-pub fn receive_sol(ctx: &Context<UpdatePet>) -> Result<()> {
-    let ix = system_program::Transfer {
-        from: ctx.accounts.authority.to_account_info(),
-        to: ctx.accounts.pet.to_account_info(),
-    };
+    pub fn withdraw_sol(ctx: Context<WithdrawSol>)-> Result<()>{
+        require!(ctx.accounts.authority.key() == OWNER, CustomError::UnAuthorized);
 
-    let cpi_ctx = CpiContext::new(ctx.accounts.system_program.to_account_info(), ix);
+        let pet_account = &mut ctx.accounts.pet;
+        let pet_lamports = **pet_account.to_account_info().lamports.borrow();
 
-    system_program::transfer(cpi_ctx, FOOD_COST_LAMPORTS)
-}
+       let rent = Rent::get()?; 
+       let min_balance = rent.minimum_balance(pet_account.to_account_info().data_len());
 
-pub fn apply_decay_internal(pet: &mut Pet) -> Result<()> {
-    let now = Clock::get()?.unix_timestamp;
-    let elapsed = now.saturating_sub(pet.last_update);
+       let withdrawable = pet_lamports - min_balance;
 
-    // SAFETY: The highest `decayed_times` can be is 255. Since, cat only lives 100 lives. So there is
-    // no need to worry about lives crossing 255.
-    let decayed_times = (elapsed / DECAY_TIME).min(u8::MAX as i64) as u8;
+       **pet_account.to_account_info().lamports.borrow_mut() -= withdrawable;
+       **ctx.accounts.authority.to_account_info().lamports.borrow_mut() += withdrawable;
 
-    if decayed_times == 0 {
-        return Ok(());
+        Ok(())
     }
-
-    pet.hunger = pet
-        .hunger
-        .saturating_sub(decayed_times.saturating_mul(HUNGER_DECAY_AMT));
-    pet.happiness = pet
-        .happiness
-        .saturating_sub(decayed_times.saturating_mul(HAPPINESS_DECAY_AMT));
-
-    pet.last_update += decayed_times as i64 * DECAY_TIME;
-
-    if pet.hunger == 0 || pet.happiness == 0 {
-        pet.alive = false;
-        pet.happiness = 0;
-        pet.hunger = 0;
-    }
-
-    Ok(())
 }
 
 #[derive(Accounts)]
@@ -137,6 +148,15 @@ pub struct InitPet<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
     pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct WithdrawSol<'info>{
+    #[account(mut, seeds = [b"maya"], bump)]
+    pub pet: Account<'info, Pet>,
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    pub system_program: Program<'info, System>
 }
 
 #[account]
@@ -173,6 +193,19 @@ pub struct UpdatePet<'info> {
     pub system_program: Program<'info, System>,
 }
 
+#[event]
+pub struct EmitPetUpdated {
+    pub hunger: u8,
+    pub happiness: u8,
+    pub alive: bool,
+    pub last_feeder: Pubkey,
+}
+
+#[event]
+pub struct PetDied{
+    pub timestamp: i64
+}
+
 #[error_code]
 pub enum CustomError {
     #[msg("Pet is dead and cannot be inteacted with!")]
@@ -183,4 +216,10 @@ pub enum CustomError {
 
     #[msg("Overflow occured")]
     Overflow,
+
+    #[msg("You are not worthy enough to create a new pet")]
+    UnAuthorized,
+
+    #[msg("Insufficient fund, Includes rent calculation")]
+    InSufficientFunds
 }
