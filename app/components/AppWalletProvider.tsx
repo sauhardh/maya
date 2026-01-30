@@ -16,13 +16,15 @@ import {
 // Default styles that can be overridden by your app
 import "@solana/wallet-adapter-react-ui/styles.css";
 
+import { RPC_ENDPOINT } from "../app/constants";
+
 export default function AppWalletProvider({
     children,
 }: {
     children: React.ReactNode;
 }) {
     const network = "localnet";
-    const endpoint = "http://localhost:8899";
+    const endpoint = RPC_ENDPOINT;
 
     const wallets = useMemo(
         () => [

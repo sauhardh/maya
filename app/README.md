@@ -1,8 +1,29 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+## Configuration
 
-First, run the development server:
+To use your own Anchor program and authorize your own wallet as the owner:
+
+### 1. Frontend Configuration
+Copy `.env.local.example` to `.env.local` and update the following:
+```bash
+NEXT_PUBLIC_PROGRAM_ID=YourProgramID
+NEXT_PUBLIC_OWNER_KEY=YourOwnerPublicKey
+```
+Changes in `app/app/constants.ts` will automatically reflect these values.
+
+### 2. Anchor Program Configuration
+1.  **Authorization**: In `programs/maya/src/constants.rs`, update the `OWNER`:
+    ```rust
+    pub const OWNER: Pubkey = pubkey!("YourOwnerPublicKey");
+    ```
+2.  **Program Identity**: In `programs/maya/src/lib.rs`, update the `declare_id!`:
+    ```rust
+    declare_id!("YourNewProgramID");
+    ```
+    *Don't forget to also update `Anchor.toml` with the same ID!*
+
+## Getting Started
 
 ```bash
 npm run dev

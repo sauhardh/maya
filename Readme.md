@@ -130,4 +130,32 @@ npm install && npm run dev
 
 **voila! keep your pet alive**
 
-NOTE: In a program, only i can initialize a pet. So, it requires my wallet's public key for initialization.
+## envs for frontend
+
+> Inside `app/`
+> Create a `.env.local.example`
+> and place this
+
+```
+
+# Maya Frontend Configuration
+# Copy this to .env.local and update the values
+
+# The Program ID of your deployed Anchor program
+NEXT_PUBLIC_PROGRAM_ID=JSkdjZGLt8gKvFsQCB2Kzd7ERgUEk1FXNJEeUiw9PWM
+
+# The Public Key that is authorized to initialize the pet (defined in lib.rs)
+NEXT_PUBLIC_OWNER_KEY=9Yz1ZHg1SFzrhHgVXKnLSBSUBtzo8uTsmwHpkzcbmNzv
+
+# The Solana RPC Endpoint to connect to
+NEXT_PUBLIC_RPC_ENDPOINT=http://localhost:8899
+```
+
+Change program id, and wallet id (owner key, only this wallet can initialize the pet) according to your choice.
+
+## envs for programs
+
+> Inside `programs/maya/src/constants.rs`
+> Change `OWNER: pubkey` as your choice.
+> Make sure your `program id` in `lib.rs` and `Anchor.toml` is matching.
+> (these keys should match with the keys that you pasted on frontend .env)

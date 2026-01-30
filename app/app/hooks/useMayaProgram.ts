@@ -4,9 +4,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import idl from "../utils/idl.json";
 
-// Hardcoded program ID from the IDL or constant
-const PROGRAM_ID = new PublicKey("JSkdjZGLt8gKvFsQCB2Kzd7ERgUEk1FXNJEeUiw9PWM");
-const MAYA_SEED = "maya";
+import { PROGRAM_ID, MAYA_SEED, OWNER_KEY } from "../constants";
 
 export interface PetAccount {
   name: string;
@@ -17,10 +15,6 @@ export interface PetAccount {
   totalSolReceived: BN;
   lastFeeder: PublicKey;
 }
-
-// Hardcoded owner from lib.rs
-// const OWNER_KEY = new PublicKey("HpMFXSQA8nKJDidF88hDsYv1efnVgwPnzwCYH1khxMZp");
-const OWNER_KEY = new PublicKey("9Yz1ZHg1SFzrhHgVXKnLSBSUBtzo8uTsmwHpkzcbmNzv");
 
 export function useMayaProgram() {
   const { connection } = useConnection();

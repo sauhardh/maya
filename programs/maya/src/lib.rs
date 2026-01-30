@@ -1,23 +1,15 @@
 use anchor_lang::prelude::{*};
 
 pub mod utils;
+pub mod constants;
+
+use crate::constants::*;
 use crate::utils::PetCare;
 
+// This is the Program ID. Update this when you deploy your own program.
+// It must match the ID in Anchor.toml and your local keys.
 declare_id!("JSkdjZGLt8gKvFsQCB2Kzd7ERgUEk1FXNJEeUiw9PWM");
 
-pub const HUNGER_GAIN_AMT: u8 = 2;
-pub const HUNGER_DECAY_AMT: u8 = 1;
-pub const HAPPINESS_DECAY_AMT: u8 = 2;
-pub const HAPPINESS_GAIN_AMT: u8 = 5;
-
-pub const MAX_FEED_AMT: u8 = 100;
-pub const MAX_HAPPINESS_AMT: u8 = 100;
-
-pub const DECAY_TIME: i64 = 30;
-pub const FOOD_COST_LAMPORTS: u64 = 100_000_000;
-pub static OWNER: Pubkey = pubkey!("9Yz1ZHg1SFzrhHgVXKnLSBSUBtzo8uTsmwHpkzcbmNzv"); 
-
-// pub static OWNER: Pubkey = pubkey!("HpMFXSQA8nKJDidF88hDsYv1efnVgwPnzwCYH1khxMZp"); 
 #[program]
 pub mod maya {
     use super::*;

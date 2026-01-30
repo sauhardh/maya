@@ -5,10 +5,7 @@ use crate::Pet;
 use crate::PetDied;
 use crate::UpdatePet;
 
-use crate::DECAY_TIME;
-use crate::FOOD_COST_LAMPORTS;
-use crate::HAPPINESS_DECAY_AMT;
-use crate::HUNGER_DECAY_AMT;
+use crate::constants::*;
 
 pub struct PetCare {}
 impl PetCare {
