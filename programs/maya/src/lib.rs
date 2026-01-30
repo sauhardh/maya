@@ -15,8 +15,9 @@ pub const MAX_HAPPINESS_AMT: u8 = 100;
 
 pub const DECAY_TIME: i64 = 30;
 pub const FOOD_COST_LAMPORTS: u64 = 100_000_000;
-pub static OWNER: Pubkey = pubkey!("9Yz1ZHg1SFzrhHgVXKnLSBSUBtzo8uTsmwHpkzcbmNzv"); 
+// pub static OWNER: Pubkey = pubkey!("9Yz1ZHg1SFzrhHgVXKnLSBSUBtzo8uTsmwHpkzcbmNzv"); 
 
+pub static OWNER: Pubkey = pubkey!("HpMFXSQA8nKJDidF88hDsYv1efnVgwPnzwCYH1khxMZp"); 
 #[program]
 pub mod maya {
     use super::*;
@@ -24,6 +25,7 @@ pub mod maya {
     pub fn init_pet(ctx: Context<InitPet>, name: Option<String>) -> Result<()> {
         msg!("Welcome home {name:?} <<<<< ID: {:?}", ctx.program_id);
 
+        // For test
         require!(ctx.accounts.authority.key() == OWNER, CustomError::UnAuthorized);
 
         let pet = &mut ctx.accounts.pet;
