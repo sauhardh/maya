@@ -156,6 +156,9 @@ Change program id, and wallet id (owner key, only this wallet can initialize the
 ## envs for programs
 
 > Inside `programs/maya/src/constants.rs`
+
 > Change `OWNER: pubkey` as your choice.
+
 > Make sure your `program id` in `lib.rs` and `Anchor.toml` is matching.
+
 > (these keys should match with the keys that you pasted on frontend .env)
