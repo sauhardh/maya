@@ -2,6 +2,8 @@
 
 > **Cat on-chain · A living pet powered by Solana**
 
+## 👇 Demo
+
 [![Click here to see the demo](./assets/logo.png)](https://www.youtube.com/watch?v=ibH-bc42ftQ)
 
 ---
