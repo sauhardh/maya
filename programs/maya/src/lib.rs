@@ -6,8 +6,7 @@ pub mod constants;
 use crate::constants::*;
 use crate::utils::PetCare;
 
-// This is the Program ID. Update this when you deploy your own program.
-// It must match the ID in Anchor.toml and your local keys.
+// ProgramID, It must match the ID in Anchor.toml and your local keys.
 declare_id!("JSkdjZGLt8gKvFsQCB2Kzd7ERgUEk1FXNJEeUiw9PWM");
 
 #[program]

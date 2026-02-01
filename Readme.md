@@ -2,7 +2,7 @@
 
 > **Cat on-chain · A living pet powered by Solana**
 
-![Maya Banner](./imgs/logo.png)
+![Maya Banner](./assets/logo.png)
 
 ---
 
