@@ -103,7 +103,7 @@ Anyone can:
 **make sure you are running validator**
 
 ```bash
-anchor-test-validator --reset
+solana-test-validator --reset
 ```
 
 ### Build program
