@@ -2,10 +2,7 @@
 
 > **Cat on-chain · A living pet powered by Solana**
 
-**Demo is here**
-![Demo](https://www.youtube.com/watch?v=ibH-bc42ftQ)
-
-![Maya Banner](./assets/logo.png)
+[![Click here to see the demo](./assets/logo.png)](https://www.youtube.com/watch?v=ibH-bc42ftQ)
 
 ---
 
